@@ -4,20 +4,49 @@
     <meta charset="UTF-8">
     <title>Elliptische Kurven</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
-
-  <script src="core/primesGenerator.js"></script>
-  <script>
-      const primegenertor = new PrimeGenerator(1000);
-      console.log(primegenertor.PrimeArray);
-  </script>
-    <script>
-
-      window.$ = window.jQuery = require('jquery');
-      require('./renderer.js');
-      require('bootstrap');
-
-    </script>
+    <header>
+      <div class="headerMenu" onclick="Screen.close()">
+        <span class="glyphicon glyphicon-remove"></span>
+      </div>
+        <!--
+      <div id="headerMenuMaxi" class="headerMenu" onclick="Screen.maximize()">
+        <span class="glyphicon glyphicon-resize-full"></span>
+      </div>
+      -->
+      <div class="headerMenu" onclick="Screen.minimize()">
+        <span class="glyphicon glyphicon-minus"></span>
+      </div>
+    </header>
+    <div class="container-fluid">
+        <div id="canvascontainer" class="col-lg-8">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+    <footer>
+      &copy; WS17@André Wagenknecht
+    </footer>
   </body>
+
+  <script src="core/3rdParty/jQuery/jquery-3.2.1.min.js" onload="(window.$ = window.jQuery = module.exports)"></script>
+  <script src="core/3rdParty/JCanvas/jcanvas.js"></script>
+
+ <script src="core/3rdParty/Math/betterRound.js"></script>
+  <script src="core/canvas.js"></script>
+  <script src="core/primes.js"></script>
+  <script src="core/rationalPoints.js"></script>
+
+  <script>
+      require('bootstrap');
+  </script>
+
+  <script src="core/screen.js"></script>
+
+  <script>
+      can.resize();
+
+  </script>
 </html>
