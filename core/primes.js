@@ -29,6 +29,9 @@ class Primes
         let index     = 2;
         let prime = true;
 
+        Progress.show();
+        let distance = 100 / this.m_MaxPrime;
+
         while (index < this.m_MaxPrime)
         {
             for(let count = 2; count < index-1; count++)
@@ -49,7 +52,12 @@ class Primes
                 prime = true;
             }
             index++;
+
+            Progress.update(index * distance);
         }
+
+        Progress.update(100);
+        Progress.hide(2000);
     };
 
     static testNumber(_prime)

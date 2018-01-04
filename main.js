@@ -16,8 +16,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
       width: 1920,
       height: 1080,
-      //resizable: false,
-     // frame: false,
+      frame: false,
       titleBarStyle: "customButtonsOnHover",
   });
 

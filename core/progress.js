@@ -8,19 +8,19 @@ let Progress =
         progressbar.show()
     },
 
-    hide: function ()
+    hide: function (_time)
     {
-        setTimeout('progressbar.hide()', 2000);
+        setTimeout('progressbar.hide()', _time);
     },
 
-    update: function (value)
+    update: function (_value)
     {
-        if(isNaN(value) || value < 0 )
+        if(isNaN(_value) || _value < 0 )
             throw new Error("invalid value!");
 
-        if(value > 100)
-            value = 100;
+        if(_value > 100)
+            _value = 100;
 
-        progressbar.css('width', value+'%').attr('aria-valuenow', value);
+        progressbar.css('width', _value+'%').attr('aria-valuenow', _value);
     },
 };
