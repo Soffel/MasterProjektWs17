@@ -88,22 +88,16 @@ let CanvasF =
         if(isNaN(_separations))
             throw new Error("invalid value: "+_separations);
 
-        Progress.show();
-
         let canvas = $('#canvas');
         let size   = canvas.width();
 
         _separations = (_separations / $('#space').val()) ;
 
         let distance = (size - axesDistance - beautyDistance) / _separations;
-        let progress = 100 / _separations;
-        let count    = 0;
 
-        console.log(distance);
         if(distance < 20)
-        {
             Preparer.zoomUp();
-        }
+
 
         for(let index = (distance + axesDistance); index < size; index += distance)
         {
@@ -142,28 +136,25 @@ let CanvasF =
                 x2: axesDistance,
                 y2: (size - index),
             });
-
-            count += progress;
-            Progress.update(count);
         }
 
-        Progress.update(100);
-        Progress.hide(_time);
     },
 
     createPoints: function (_pointsArray)
     {
+        Progress.update(0);
+
         let separations = (_pointsArray["bigX"] > _pointsArray["bigY"] ? _pointsArray["bigX"] : _pointsArray["bigY"])+1;
 
         this.resize(separations,750);
 
-        Progress.show();
+        Progress.update(10);
 
         let canvas     = $('#canvas');
         let canvassize = (canvas.width() - axesDistance - beautyDistance)
         let distance   = canvassize / separations;
-        let progress   = 100 / _pointsArray.length;
-        let count      = 0;
+        let progress   = 90 / _pointsArray.length;
+        let count      = 10;
 
         for(let index = 0; index < _pointsArray.length; index++)
         {
@@ -176,7 +167,7 @@ let CanvasF =
                 y: (canvassize - (point[1] * distance)) + beautyDistance,
                 radius: 5,
                 holeSize: 0.5,
-                data:point,
+                data:[point,index],
                 mouseover: function(layer) {
                   console.log(layer.data);
                 },
@@ -188,6 +179,5 @@ let CanvasF =
         }
 
         Progress.update(100);
-        Progress.hide(2000);
     }
 };

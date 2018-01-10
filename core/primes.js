@@ -26,10 +26,11 @@ class Primes
 
     _generatePrimesArray()
     {
+        Progress.update(0);
+
         let index     = 2;
         let prime = true;
 
-        Progress.show();
         let distance = 100 / this.m_MaxPrime;
 
         while (index < this.m_MaxPrime)
@@ -57,7 +58,6 @@ class Primes
         }
 
         Progress.update(100);
-        Progress.hide(2000);
     };
 
     static testNumber(_prime)

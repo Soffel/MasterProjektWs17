@@ -3,12 +3,12 @@ let RationalPoints =
 {
     generatePoints(_a,_b,_Z)
     {
+        Progress.update(0);
+
         let m_Points = [];
 
         if(isNaN(_Z) || !Primes.testNumber(_Z) || isNaN(_a) || isNaN(_b))
             throw new Error("invalid values!");
-
-        Progress.show();
 
         let progress = 100 / _Z;
         let count    = 0;
@@ -37,7 +37,6 @@ let RationalPoints =
         m_Points["bigY"] = bixY;
 
         Progress.update(100);
-        Progress.hide();
 
         return m_Points;
     },
