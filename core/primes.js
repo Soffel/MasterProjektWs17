@@ -1,77 +1,48 @@
-let primesinstance = null;
+let PrimeFunctions = {
 
-class Primes
-{
-    constructor(_maxPrime)
-    {
-        if(!primesinstance)
-        {
-            this._TAG         = "PRIMES: ";
-            this.m_PrimeArray = [];
-
-            if(isNaN(_maxPrime) || _maxPrime <= 2)
-                throw new Error(this.TAG + "invalid constructor!");
-
-            this.m_MaxPrime = _maxPrime;
-
-            this._generatePrimesArray();
-
-            primesinstance = this;
+    testAndGetNextPrime(_prime) {
+        if (this.testNumber(_prime)) {
+            return _prime;
         }
-        return primesinstance;
-    }
+        else {
+            let prime = false;
+            while (!prime) {
+                _prime++;
+                prime = this.testNumber(_prime);
+            }
+            return _prime;
+        }
+    },
 
-    get TAG()        {return this._TAG;}
-    get PrimeArray() {return this.m_PrimeArray;}
-
-    _generatePrimesArray()
-    {
-        Progress.update(0);
-
-        let index     = 2;
-        let prime = true;
-
-        let distance = 100 / this.m_MaxPrime;
-
-        while (index < this.m_MaxPrime)
-        {
-            for(let count = 2; count < index-1; count++)
-            {
-                if(index % count === 0)
+    testAndGetLastPrime(_prime) {
+        if (this.testNumber(_prime)) {
+            return _prime;
+        }
+        else {
+            let prime = false;
+            while (!prime) {
+                if(_prime > 2)
                 {
-                    prime = false;
-                    break;
+                    _prime--;
+                    prime = this.testNumber(_prime);
                 }
+                else
+                    return 2;
             }
-
-            if(prime)
-            {
-                this.m_PrimeArray.push(index);
-            }
-            else
-            {
-                prime = true;
-            }
-            index++;
-
-            Progress.update(index * distance);
+            return _prime;
         }
+    },
 
-        Progress.update(100);
-    };
-
-    static testNumber(_prime)
-    {
-        if(isNaN(_prime) || _prime < 2)
+    testNumber(_prime) {
+        if (isNaN(_prime) || _prime < 2)
             return false;
 
-        for(let index = 2; index < _prime; index++)
-        {
-            if(_prime % index === 0)
-            {
+        for (let index = 2; index < _prime; index++) {
+            if (_prime % index === 0) {
                 return false;
             }
         }
         return true;
-    };
-}
+    },
+};
+

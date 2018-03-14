@@ -7,7 +7,7 @@ let RationalPoints =
 
         let m_Points = [];
 
-        if(isNaN(_Z) || !Primes.testNumber(_Z) || isNaN(_a) || isNaN(_b))
+        if(isNaN(_Z) || !PrimeFunctions.testNumber(_Z) || isNaN(_a) || isNaN(_b))
             throw new Error("invalid values!");
 
         let progress = 100 / _Z;
@@ -40,4 +40,18 @@ let RationalPoints =
 
         return m_Points;
     },
+
+    checkAandB(_id) {
+        let a = parseInt($(VAR_A_INPUT).val());
+        let b = parseInt($(VAR_B_INPUT).val());
+
+        if (((4 * (a * a * a) + (27 * (b * b))) % parseInt($(PRIME_INPUT).val())) === 0) {
+            if (_id === 'a')
+                swal('Bitte einen anderen Wert für a wählen');
+            else
+                swal('Bitte einen anderen Wert für b wählen');
+            return false;
+        }
+        return true;
+    }
 };

@@ -1,107 +1,112 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
 
     <meta charset="UTF-8">
     <title>Elliptische Kurven</title>
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="node_modules/sweetalert/dist/sweetalert.min.js"></script>
 
-  </head>
-  <body>
+</head>
+<body>
 
-    <header>
+<header>
 
-      <div class="headerMenu" onclick="Screen.close()">
+    <div class="headerMenu" onclick="Screen.close()">
         <span class="glyphicon glyphicon-remove"></span>
-      </div>
+    </div>
 
-      <div id="headerMenuMaxi" class="headerMenu" onclick="Screen.maximize()">
+    <div id="headerMenuMaxi" class="headerMenu" onclick="Screen.maximize()">
         <span class="glyphicon glyphicon-resize-full"></span>
-      </div>
+    </div>
 
-      <div class="headerMenu" onclick="Screen.minimize()">
+    <div class="headerMenu" onclick="Screen.minimize()">
         <span class="glyphicon glyphicon-minus"></span>
-      </div>
+    </div>
 
-    </header>
+</header>
 
-    <div class="container-fluid">
-        <div id="canvascontainer" class="col-lg-8">
-            <canvas id="canvas" width="600" height="600"></canvas>
-        </div>
-        <div class="col-lg-4">
+<div class="container-fluid">
+    <div id="canvascontainer" class="col-lg-8">
+        <canvas id="canvas" width="600" height="600"></canvas>
+    </div>
+    <div class="col-lg-4">
 
-          <label for="space">Aufteilung</label>
-          <select id="space" onchange="redraw()">
+        <label for="space">Aufteilung</label>
+        <select id="space" onchange=" Preparer.redraw()">
             <option value="1" selected>1</option>
+        </select>
+        <br>
+        <label for="primeinput"><math>p</math></label>
+        <div class="input-group">
 
-          </select>
-<button class="btn-default" onclick="nextPrime()">next</button>
-          <input id="primeinput" value="">
-
-
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="UI.lastPrime()"><</button>
+              </span>
+            <input type="text" id="primeinput" class="form-control" min="2" value="3" onchange="UI.nextPrime()">
+            <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" onclick="UI.nextPrime()">></button>
+              </span>
+        </div>
+        <br>
+        <label for="a"><math>a</math></label>
+        <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="UI.last('a')"><</button>
+              </span>
+            <input type="text" id="a" class="form-control" value="1" onchange="UI.check('a')">
+            <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" onclick="UI.next('a')">></button>
+              </span>
+        </div>
+        <br>
+        <label for="b"><math>b</math></label>
+        <div class="input-group">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="UI.last('b')"><</button>
+              </span>
+            <input type="text" class="form-control" id="b" value="1" onchange="UI.check('b')">
+            <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
+              </span>
         </div>
     </div>
 
-    <div class="progress" >
-      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 
     <footer>
 
-      &copy; Masterprojekt WS17 @André Wagenknecht
+        &copy; Masterprojekt WS17 @André Wagenknecht
     </footer>
 
-  </body>
+</body>
 
-  <script src="node_modules/jquery/dist/jquery.js"></script>
-  <script>window.$ = window.jQuery = require('jquery');</script>
-  <script>require('bootstrap');</script>
-  <script src="core/3rdParty/JCanvas/jcanvas.js"></script>
-  <script src="core/3rdParty/Math/betterRound.js"></script>
-  <script src="core/3rdParty/JCanvas/donuts.js"></script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/sweetalert/dist/sweetalert.min.js"></script>
+<script>window.$ = window.jQuery = require('jquery');</script>
+<script>require('bootstrap');</script>
+<script src="core/3rdParty/JCanvas/jcanvas.js"></script>
+<script src="core/3rdParty/Math/betterRound.js"></script>
+<script src="core/3rdParty/JCanvas/donuts.js"></script>
 
-  <script src="core/preparer.js"></script>
-  <script src="core/screen.js"></script>
-  <script src="core/progress.js"></script>
-  <script src="core/canvas.js"></script>
-  <script src="core/primes.js"></script>
-  <script src="core/rationalPoints.js"></script>
+<script src="core/UI.js"></script>
+<script src="core/screen.js"></script>
+<script src="core/canvas.js"></script>
+<script src="core/primes.js"></script>
+<script src="core/rationalPoints.js"></script>
 
-  <script>
-    let count = 0;
-    let prims = (new Primes(5000)).PrimeArray;
+<script>
+    $(function () {
+        Preparer.run();
+        Preparer.redraw()
+    });
 
-    let p = prims[0];
-
-      function nextPrime()
-      {
-          count++;
-          if(count < prims.length)
-          {
-              p = prims[count];
-              $('#primeinput').val(p);
-              Preparer.createSpaceSelect(p);
-              redraw();
-          }
-      }
-
-      function redraw()
-      {
-          CanvasF.createPoints(RationalPoints.generatePoints(1,1,p),p);
-      }
-          
-      $(function()
-      {
-          Preparer.run();
-          redraw()
-      });
-
-      $( window ).resize(function() {
-          redraw()
-      });
-
-  </script>
+    $(window).resize(function () {
+        Preparer.redraw()
+    });
+</script>
 </html>

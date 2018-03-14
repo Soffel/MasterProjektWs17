@@ -2,6 +2,18 @@ body
 {
     background-color: #f5f5f5;
     height: 100%;
+
+}
+header
+{
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 35px;
+    vertical-align: middle;
+    border-bottom: lightgrey 1px solid;
 }
 footer
 {
@@ -33,6 +45,7 @@ footer
     float: right;
     padding: 10px;
     z-index: 9001;
+    -webkit-app-region: no-drag;
 }
 
 .progress
@@ -41,6 +54,7 @@ footer
     height: 12px;
     width: 100%;
     bottom: 0;
+    left: 0;
 }
 .progress-bar
 {
