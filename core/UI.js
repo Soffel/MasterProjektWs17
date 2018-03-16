@@ -16,22 +16,25 @@ let Preparer =
 
         redraw: function() {
             let p = $(PRIME_INPUT).val();
-            CanvasF.createPoints(RationalPoints.generatePoints($(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), p), p);
+            //CanvasF.createPoints(RationalPoints.generatePoints($(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), p));
+            CanvasCreator.createPoints(RationalPoints.generatePoints($(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), p));
         },
 
         clear: function() {
-            CanvasF.createPoints(0);
+            //CanvasF.createPoints(0);
         },
 
         zoomUp: function () {
-
             zoom++;
-
+            this.createSpaceSelect();
         },
 
         zoomDown: function () {
             if (zoom > 0)
+            {
                 zoom--;
+                this.createSpaceSelect();
+            }
         },
 
         getZoom: function () {
