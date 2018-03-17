@@ -29,48 +29,73 @@
 </header>
 
 <div class="container-fluid">
-    <div id="canvascontainer" class="col-lg-8">
+
+    <div id="canvascontainer" class="col-lg-7">
         <canvas id="canvas" width="600" height="600"></canvas>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-4 form-inline">
+        <div id="menu">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div id="funktion" class="text-center">
+                        <math> y<sup>2</sup> = x<sup>3</sup> + <span id="forma">1</span>x + <span id="formb">1</span> über Z<sub id="prime">3</sub></math>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="pull-right">
+                        <label for="space">Aufteilung: </label>
+                        <select id="space" class="form-control" onchange="Preparer.redraw()">
+                            <option value="1" selected>1</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-        <label for="space">Aufteilung</label>
-        <select id="space" onchange=" Preparer.redraw()">
-            <option value="1" selected>1</option>
-        </select>
-        <br>
-        <label for="primeinput"><math>p</math></label>
-        <div class="input-group">
+            <br><br>
 
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" onclick="UI.lastPrime()"><</button>
-              </span>
-            <input type="text" id="primeinput" class="form-control" min="2" value="3" onchange="UI.testPrime()">
-            <span class="input-group-btn">
-                  <button class="btn btn-default" type="button" onclick="UI.nextPrime()">></button>
-              </span>
-        </div>
-        <br>
-        <label for="a"><math>a</math></label>
-        <div class="input-group">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" onclick="UI.last('a')"><</button>
-              </span>
-            <input type="text" id="a" class="form-control" value="1" onchange="UI.check('a')">
-            <span class="input-group-btn">
-                  <button class="btn btn-default" type="button" onclick="UI.next('a')">></button>
-              </span>
-        </div>
-        <br>
-        <label for="b"><math>b</math></label>
-        <div class="input-group">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" onclick="UI.last('b')"><</button>
-              </span>
-            <input type="text" id="b" class="form-control" value="1" onchange="UI.check('b')">
-            <span class="input-group-btn">
-                  <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
-              </span>
+            <div class="row">
+                <div class="col-lg-6" >
+                    <label for="primeinput"><math>p</math>: </label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.lastPrime()"><</button>
+                        </span>
+                        <input type="text" id="primeinput" class="form-control" min="2" value="3" onchange="UI.testPrime()">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.nextPrime()">></button>
+                        </span>
+                    </div>
+
+                    <br><br>
+
+                    <label for="a"><math>a</math>: </label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.last('a')"><</button>
+                        </span>
+                        <input type="text" id="a" class="form-control" value="1" onchange="UI.check('a')">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.next('a')">></button>
+                        </span>
+                    </div>
+
+                    <br><br>
+
+                    <label for="b"><math>b</math>: </label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.last('b')"><</button>
+                        </span>
+                        <input type="text" id="b" class="form-control" value="1" onchange="UI.check('b')">
+                            <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+
+                </div>
+            </div>
         </div>
     </div>
     <div class="loader"></div>

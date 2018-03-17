@@ -68,25 +68,18 @@ let UI =
             let element = $('#' + _id);
 
             element.val((parseFloat(element.val()) + 1));
-            if (this.checkAandB(_id)) {
-                Preparer.redraw();
-            }
-            else {
-                Preparer.clear();
-            }
+            $('#form'+_id).html(element.val());
 
+           this.check(_id);
         },
 
         last(_id) {
             let element = $('#' + _id);
 
             element.val((parseFloat(element.val()) - 1));
-            if (this.checkAandB(_id)) {
-                Preparer.redraw();
-            }
-            else {
-                Preparer.clear();
-            }
+            $('#form'+_id).html(element.val());
+
+            this.check(_id);
         },
 
         check(_id) {
@@ -102,6 +95,7 @@ let UI =
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()));
             input.val(p);
+            $('#prime').html(input.val());
 
             if (this.checkAandB('a')) {
                 Preparer.createSpaceSelect(p);
@@ -117,6 +111,7 @@ let UI =
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()) + 1);
             input.val(p);
+            $('#prime').html(input.val());
 
             if (this.checkAandB('a')) {
                 Preparer.createSpaceSelect(p);
@@ -132,6 +127,8 @@ let UI =
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetLastPrime(parseInt(input.val()) - 1);
             input.val(p);
+            $('#prime').html(input.val());
+
             if (this.checkAandB('b')) {
                 Preparer.createSpaceSelect(p);
                 Preparer.redraw();
