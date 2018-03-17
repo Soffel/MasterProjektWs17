@@ -11,6 +11,7 @@ const config =
             {
                 type: 'Arial',
                 size: 15,
+                minSize: 12,
             },
         distance:
             {
@@ -134,7 +135,7 @@ let CanvasCreator = {
             Preparer.zoomUp();
             dis = this.getAndChangeDistance(_size, _countOfSeparations, '<')
         }
-        else if (dis > 145 && Preparer.getZoom() > 0 && _last !== '<') {
+        else if (dis > 120 && Preparer.getZoom() > 0 && _last !== '<') {
             Preparer.zoomDown();
             dis = this.getAndChangeDistance(_size, _countOfSeparations, '>')
         }
@@ -194,17 +195,17 @@ let CanvasCreator = {
                 strokeWidth: config.width.text,
                 x: index,
                 y: (canvasSize - config.distance.padding - config.distance.text),
-                fontSize: config.font.size,
+                fontSize: (space > 1000)? config.font.minSize : config.font.size,
                 fontFamily: config.font.type,
                 text: space
-            }).drawText({ //beschriftung x achse
+            }).drawText({ //beschriftung y achse
                 layer: true,
                 fillStyle: config.color.axes,
                 strokeStyle: config.color.axes,
                 strokeWidth: config.width.text,
-                x: (config.distance.padding - (space > 10 ? (space > 100 ? (4 * config.distance.text) : (2 * config.distance.text)) : 0)),
-                y: (canvasSize - index - (config.font.size * 0.5)),
-                fontSize: config.font.size,
+                x: (config.distance.padding - (space > 10 ? (space > 100 ? (space > 1000 ? (5 * config.distance.text) : (4 * config.distance.text)) : (2 * config.distance.text)) : 0)),
+                y: (canvasSize - index - ((space > 1000)? config.font.minSize * 0.5 : config.font.size* 0.5)),
+                fontSize: (space > 1000)? config.font.minSize : config.font.size,
                 fontFamily: config.font.type,
                 text: space,
                 fromCenter: false,

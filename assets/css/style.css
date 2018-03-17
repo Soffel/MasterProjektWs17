@@ -42,12 +42,8 @@ footer {
 #menu {
     margin-top: 50px;
 }
-
-.input-group {
-    width: 100%;
-}
-.input-group-btn:first-child>.btn {
-    margin-right: -4px !important;
+.marg10{
+    margin-left: 10px;
 }
 .headerMenu {
     position: sticky;
