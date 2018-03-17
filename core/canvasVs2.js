@@ -126,18 +126,17 @@ let CanvasCreator =
             });
         },
 
-        getAndChangeDistance: function (_size, _countOfSeparations) {
-
+        getAndChangeDistance: function (_size, _countOfSeparations, _last) {
             let sep = _countOfSeparations / $('#space').val();
             let dis = ($('#canvas').width() - (2 * config.distance.padding + config.distance.axes)) / sep;
-            console.log(dis);
-               if (dis < 35 ) {
+
+               if (dis < 35 && _last !== '>') {
                    Preparer.zoomUp();
-                   dis = this.getAndChangeDistance(_size, _countOfSeparations)
+                   dis = this.getAndChangeDistance(_size, _countOfSeparations, '<')
                }
-               else if (dis > 146 && Preparer.getZoom() > 1) {
+               else if (dis > 145 && Preparer.getZoom() > 0 && _last !== '<') {
                    Preparer.zoomDown();
-                   dis = this.getAndChangeDistance(_size, _countOfSeparations)
+                   dis = this.getAndChangeDistance(_size, _countOfSeparations, '>')
                }
 
             return dis;
@@ -149,13 +148,13 @@ let CanvasCreator =
 
             let canvas = $('#canvas');
             let canvasSize = canvas.width();
-            let distance = this.getAndChangeDistance(canvasSize, parseInt(_countOfSeparations));
+            let distance = this.getAndChangeDistance(canvasSize, parseInt(_countOfSeparations),'');
             let count = 1;
-            let zoom = Preparer.getZoom();
 
             for (let index = (distance + config.distance.padding + config.distance.axes);
                  index < (canvasSize - config.distance.padding);
                  index += distance) {
+                let space = ($('#space').val() * count);
                 canvas.drawLine({ //grid senkrecht
                     layer: true,
                     strokeStyle: config.color.grid,
@@ -197,17 +196,17 @@ let CanvasCreator =
                     y: (canvasSize - config.distance.padding - config.distance.text),
                     fontSize: config.font.size,
                     fontFamily: config.font.type,
-                    text: ((zoom + 1) * count)
+                    text: space
                 }).drawText({ //beschriftung x achse
                     layer: true,
                     fillStyle: config.color.axes,
                     strokeStyle: config.color.axes,
                     strokeWidth: config.width.text,
-                    x: (config.distance.padding - config.distance.text + (((zoom + 1) * count) < 10 ? (2 * config.distance.text) : 0)),
+                    x: (config.distance.padding - (4*config.distance.text) + (space < 10 ? (4 * config.distance.text) : (space < 100 ? (2 * config.distance.text) : 0))),
                     y: (canvasSize - index - (config.font.size * 0.5)),
                     fontSize: config.font.size,
                     fontFamily: config.font.type,
-                    text: ((zoom + 1) * count),
+                    text: space,
                     fromCenter: false,
                 });
                 count++;
@@ -220,13 +219,9 @@ let CanvasCreator =
                 return;
             }
 
-            Progress.update(0);
-
             let separations = (_pointsArray["bigX"] > _pointsArray["bigY"] ? _pointsArray["bigX"] : _pointsArray["bigY"]) + 1;
 
-            this.resize(separations);
-
-            Progress.update(10);
+            CanvasCreator.resize(separations);
 
             let canvas = $('#canvas');
             let canvassize = (canvas.width() -  (2*config.distance.padding) - config.distance.axes);
@@ -252,10 +247,6 @@ let CanvasCreator =
                 });
 
                 count += progress;
-                Progress.update(count);
             }
-            Progress.update(100);
         }
-
-
     };

@@ -45,7 +45,7 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button" onclick="UI.lastPrime()"><</button>
               </span>
-            <input type="text" id="primeinput" class="form-control" min="2" value="3" onchange="UI.nextPrime()">
+            <input type="text" id="primeinput" class="form-control" min="2" value="3" onchange="UI.testPrime()">
             <span class="input-group-btn">
                   <button class="btn btn-default" type="button" onclick="UI.nextPrime()">></button>
               </span>
@@ -67,21 +67,19 @@
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button" onclick="UI.last('b')"><</button>
               </span>
-            <input type="text" class="form-control" id="b" value="1" onchange="UI.check('b')">
+            <input type="text" id="b" class="form-control" value="1" onchange="UI.check('b')">
             <span class="input-group-btn">
                   <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
               </span>
         </div>
     </div>
-
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="loader"></div>
+    <div class="cssload-box-loading">
     </div>
-</div>
 <footer>
     &copy; Masterprojekt WS17 @André Wagenknecht
 </footer>
-
+</div>
 </body>
 
 <script src="node_modules/jquery/dist/jquery.js"></script>
@@ -94,10 +92,9 @@
 
 <script src="core/UI.js"></script>
 <script src="core/screen.js"></script>
-<script src="core/canvas.js"></script>
 <script src="core/canvasVs2.js"></script>
 <script src="core/primes.js"></script>
-<script src="core/rationalPoints.js"></script>
+<script src="core/rationalPoints.js" async></script>
 
 <script>
     $(function () {
@@ -109,5 +106,7 @@
         Preparer.redraw();
 
     });
+
 </script>
+
 </html>

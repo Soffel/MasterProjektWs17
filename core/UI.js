@@ -4,8 +4,6 @@ const VAR_A_INPUT = '#a';
 const VAR_B_INPUT = '#b';
 let zoom = 0;
 
-const progressbar = $('.progress-bar');
-
 let Preparer =
     {
         run: function () {
@@ -14,14 +12,20 @@ let Preparer =
             this.createSpaceSelect();
         },
 
-        redraw: function() {
-            let p = $(PRIME_INPUT).val();
-            //CanvasF.createPoints(RationalPoints.generatePoints($(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), p));
-            CanvasCreator.createPoints(RationalPoints.generatePoints($(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), p));
+        redraw: function () {
+            Progress.onRun();
+
+            const worker = new Worker('core/rationalPoints.js');
+
+            worker.postMessage([$(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), $(PRIME_INPUT).val()]);
+            worker.onmessage = e => {
+                CanvasCreator.createPoints(e.data);
+                Progress.onFinish();
+            };
         },
 
-        clear: function() {
-            //CanvasF.createPoints(0);
+        clear: function () {
+            CanvasCreator.clear();
         },
 
         zoomUp: function () {
@@ -30,8 +34,7 @@ let Preparer =
         },
 
         zoomDown: function () {
-            if (zoom > 0)
-            {
+            if (zoom > 0) {
                 zoom--;
                 this.createSpaceSelect();
             }
@@ -65,12 +68,10 @@ let UI =
             let element = $('#' + _id);
 
             element.val((parseFloat(element.val()) + 1));
-            if(RationalPoints.checkAandB(_id))
-            {
+            if (this.checkAandB(_id)) {
                 Preparer.redraw();
             }
-            else
-            {
+            else {
                 Preparer.clear();
             }
 
@@ -80,26 +81,36 @@ let UI =
             let element = $('#' + _id);
 
             element.val((parseFloat(element.val()) - 1));
-            if(RationalPoints.checkAandB(_id))
-            {
+            if (this.checkAandB(_id)) {
                 Preparer.redraw();
             }
-            else
-            {
+            else {
                 Preparer.clear();
             }
         },
 
-        check(_id)
-        {
-            if(RationalPoints.checkAandB(_id))
-            {
+        check(_id) {
+            if (this.checkAandB(_id)) {
                 Preparer.redraw();
             }
-            else
-            {
+            else {
                 Preparer.clear();
             }
+        },
+
+        testPrime() {
+            const input = $(PRIME_INPUT);
+            let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()));
+            input.val(p);
+
+            if (this.checkAandB('a')) {
+                Preparer.createSpaceSelect(p);
+                Preparer.redraw();
+            }
+            else {
+                Preparer.clear();
+            }
+
         },
 
         nextPrime() {
@@ -107,13 +118,11 @@ let UI =
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()) + 1);
             input.val(p);
 
-            if(RationalPoints.checkAandB('a'))
-            {
+            if (this.checkAandB('a')) {
                 Preparer.createSpaceSelect(p);
                 Preparer.redraw();
             }
-            else
-            {
+            else {
                 Preparer.clear();
             }
 
@@ -123,28 +132,40 @@ let UI =
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetLastPrime(parseInt(input.val()) - 1);
             input.val(p);
-            if(RationalPoints.checkAandB('b'))
-            {
+            if (this.checkAandB('b')) {
                 Preparer.createSpaceSelect(p);
                 Preparer.redraw();
             }
-            else
-            {
+            else {
                 Preparer.clear();
             }
+        },
+
+        checkAandB(_id) {
+            let a = parseInt($(VAR_A_INPUT).val());
+            let b = parseInt($(VAR_B_INPUT).val());
+
+            if (((4 * (a * a * a) + (27 * (b * b))) % parseInt($(PRIME_INPUT).val())) === 0) {
+                if (_id === 'a')
+                    swal('Bitte einen anderen Wert für a wählen');
+                else
+                    swal('Bitte einen anderen Wert für b wählen');
+                return false;
+            }
+            return true;
         },
     };
 
 let Progress =
     {
-        update: function (_value) {
-            if (isNaN(_value) || _value < 0)
-                throw new Error("invalid value!");
-
-            if (_value > 100)
-                _value = 100;
-
-            // console.log(_value);
-            progressbar.css('width', _value + '%').attr('aria-valuenow', _value);
+        onRun: function () {
+            $('.cssload-box-loading').css('display', 'block');
+            $('.loader').css('display', 'block');
         },
+        onFinish: function () {
+            setTimeout(function () {
+                $('.cssload-box-loading').css('display', 'none');
+                $('.loader').css('display', 'none');
+            }, 200);
+        }
     };
