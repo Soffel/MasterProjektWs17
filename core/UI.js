@@ -3,6 +3,9 @@ const PRIME_INPUT = '#primeinput';
 const VAR_A_INPUT = '#a';
 const VAR_B_INPUT = '#b';
 let zoom = 0;
+let indexP = -1;
+let indexQ = -1;
+let pointsArray;
 
 let Preparer =
     {
@@ -19,6 +22,7 @@ let Preparer =
 
             worker.postMessage([$(VAR_A_INPUT).val(), $(VAR_B_INPUT).val(), $(PRIME_INPUT).val()]);
             worker.onmessage = e => {
+                Preparer.setPointsArray(e.data);
                 CanvasCreator.createPoints(e.data);
                 Progress.onFinish();
             };
@@ -42,6 +46,18 @@ let Preparer =
 
         getZoom: function () {
             return zoom;
+        },
+
+        getPointsArray: function () {
+            return pointsArray;
+        },
+
+        getPoint:function (_index) {
+            return pointsArray[_index];
+        },
+
+        setPointsArray: function (_pointsArray) {
+            pointsArray = _pointsArray;
         },
 
         createSpaceSelect: function () {
@@ -68,16 +84,16 @@ let UI =
             let element = $('#' + _id);
 
             element.val((parseFloat(element.val()) + 1));
-            $('#form'+_id).html(element.val());
+            $('#form' + _id).html(element.val());
 
-           this.check(_id);
+            this.check(_id);
         },
 
         last(_id) {
             let element = $('#' + _id);
 
             element.val((parseFloat(element.val()) - 1));
-            $('#form'+_id).html(element.val());
+            $('#form' + _id).html(element.val());
 
             this.check(_id);
         },
@@ -150,6 +166,51 @@ let UI =
                 return false;
             }
             return true;
+        },
+
+        setP(_index) {
+            indexP = _index;
+
+            $('#P').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+        },
+
+        lastP() {
+            if (indexP > 0) {
+                indexP--;
+                this.setP(indexP);
+                CanvasCreator.markPoint(indexP,'P');
+            }
+
+        },
+
+        nextP() {
+            if (indexP < (pointsArray.length - 1)) {
+                indexP++;
+                this.setP(indexP);
+                CanvasCreator.markPoint(indexP,'P');
+            }
+        },
+
+        setQ(_index) {
+            indexQ = _index;
+            $('#Q').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+        },
+
+        lastQ() {
+            if (indexQ > 0) {
+                indexQ--;
+                this.setQ(indexQ);
+                CanvasCreator.markPoint(indexQ,'Q');
+            }
+
+        },
+
+        nextQ() {
+            if (indexQ < (pointsArray.length - 1)) {
+                indexQ++;
+                this.setQ(indexQ);
+                CanvasCreator.markPoint(indexQ,'Q');
+            }
         },
     };
 

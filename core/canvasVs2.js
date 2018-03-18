@@ -6,6 +6,7 @@ const config =
                 axes: '#000',
                 grid: '#929292',
                 point: '#165dff',
+                mark: '#ff0000',
             },
         font:
             {
@@ -40,6 +41,8 @@ const config =
 
             }
     };
+
+let makedP = false;
 
 
 let CanvasCreator = {
@@ -195,7 +198,7 @@ let CanvasCreator = {
                 strokeWidth: config.width.text,
                 x: index,
                 y: (canvasSize - config.distance.padding - config.distance.text),
-                fontSize: (space > 1000)? config.font.minSize : config.font.size,
+                fontSize: (space > 1000) ? config.font.minSize : config.font.size,
                 fontFamily: config.font.type,
                 text: space
             }).drawText({ //beschriftung y achse
@@ -204,8 +207,8 @@ let CanvasCreator = {
                 strokeStyle: config.color.axes,
                 strokeWidth: config.width.text,
                 x: (config.distance.padding - (space > 10 ? (space > 100 ? (space > 1000 ? (5 * config.distance.text) : (4 * config.distance.text)) : (2 * config.distance.text)) : 0)),
-                y: (canvasSize - index - ((space > 1000)? config.font.minSize * 0.5 : config.font.size* 0.5)),
-                fontSize: (space > 1000)? config.font.minSize : config.font.size,
+                y: (canvasSize - index - ((space > 1000) ? config.font.minSize * 0.5 : config.font.size * 0.5)),
+                fontSize: (space > 1000) ? config.font.minSize : config.font.size,
                 fontFamily: config.font.type,
                 text: space,
                 fromCenter: false,
@@ -230,20 +233,66 @@ let CanvasCreator = {
 
         for (let index = 0; index < _pointsArray.length; index++) {
             let point = _pointsArray[index];
+            let pointX = ((point[0] * distance) + config.distance.padding + config.distance.axes);
+            let pointY = ((canvassize - (point[1] * distance)) + config.distance.axes - config.point.radius);
+            _pointsArray[index]['point'] = {pointX, pointY};
             canvas.drawDonut({
                 layer: true,
                 fillStyle: config.color.point,
-                x: ((point[0] * distance) + config.distance.padding + config.distance.axes),
-                y: ((canvassize - (point[1] * distance)) + config.distance.axes - config.point.radius),
+                x: pointX,
+                y: pointY,
                 radius: config.point.radius,
                 holeSize: config.point.hole,
-                data: [point, index],
-                mouseover: function (layer) {
-                    console.log(layer.data);
+                data: {
+                    point: {
+                        x: point[0],
+                        y: point[1],
+                    },
+
+                    index: index,
                 },
-                mouseout: function (layer) {
+                click: function (layer) {
+                    CanvasCreator.markPoint(layer.data.index, makedP ? 'Q' : 'P');
+                    if (!makedP) {
+                        UI.setP(layer.data.index);
+                    }
+                    else {
+                        UI.setQ(layer.data.index);
+                    }
+                    makedP = !makedP;
                 },
             });
         }
+    },
+
+    markPoint: function (_index, _name) {
+
+        let canvas = $('#canvas');
+        let point = Preparer.getPoint(_index);
+
+        canvas.removeLayer(_name).removeLayer(_name + 'text').drawLayers();
+
+        canvas.drawDonut({
+            layer: true,
+            name: _name,
+            fillStyle: config.color.mark,
+            x: point['point'].pointX,
+            y: point['point'].pointY,
+            radius: config.point.radius,
+            holeSize: config.point.hole,
+
+        }).drawText({
+            layer: true,
+            name: _name + 'text',
+            fillStyle: config.color.mark,
+            strokeStyle: config.color.mark,
+            strokeWidth: config.width.text,
+            x: (point['point'].pointX - ((_name === 'Q') ? -config.font.size: config.font.size )),
+            y: (point['point'].pointY - config.font.size),
+            fontSize: config.font.size,
+            fontFamily: config.font.type,
+            text: _name,
+        });
+
     }
 };

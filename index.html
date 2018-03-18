@@ -93,17 +93,38 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
+                    <label for="P"><math>P</math>: </label>
+                    <div class="input-group marg10">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.lastP()"><</button>
+                        </span>
+                        <input type="text" id="P" class="form-control"  value="-" disabled>
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="UI.nextP()">></button>
+                        </span>
+                    </div>
 
+                    <br><br>
+
+                    <label for="Q"><math>Q</math>: </label>
+                    <div class="input-group marg10">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.lastQ()"><</button>
+                        </span>
+                        <input type="text" id="Q" class="form-control" value="-" disabled>
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="UI.nextQ()">></button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="loader"></div>
-    <div class="cssload-box-loading">
-    </div>
-<footer>
-    &copy; Masterprojekt WS17 @André Wagenknecht
-</footer>
+    <div class="cssload-box-loading"></div>
+    <footer>
+        &copy; Masterprojekt WS17 @André Wagenknecht
+    </footer>
 </div>
 </body>
 
