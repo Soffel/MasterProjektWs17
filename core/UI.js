@@ -25,11 +25,17 @@ let Preparer =
                 Preparer.setPointsArray(e.data);
                 CanvasCreator.createPoints(e.data);
                 Progress.onFinish();
+                if(indexP  >= 0) UI.setP(indexP);
+                if(indexQ  >= 0) UI.setQ(indexQ);
+
             };
         },
 
         clear: function () {
+            pointsArray = null;
             CanvasCreator.clear();
+            UI.cleanMarkers();
+
         },
 
         zoomUp: function () {
@@ -81,8 +87,8 @@ let Preparer =
 let UI =
     {
         next(_id) {
+            this.cleanMarkers();
             let element = $('#' + _id);
-
             element.val((parseFloat(element.val()) + 1));
             $('#form' + _id).html(element.val());
 
@@ -90,11 +96,10 @@ let UI =
         },
 
         last(_id) {
+            this.cleanMarkers();
             let element = $('#' + _id);
-
             element.val((parseFloat(element.val()) - 1));
             $('#form' + _id).html(element.val());
-
             this.check(_id);
         },
 
@@ -108,6 +113,7 @@ let UI =
         },
 
         testPrime() {
+            this.cleanMarkers();
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()));
             input.val(p);
@@ -124,6 +130,7 @@ let UI =
         },
 
         nextPrime() {
+            this.cleanMarkers();
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()) + 1);
             input.val(p);
@@ -140,6 +147,7 @@ let UI =
         },
 
         lastPrime() {
+            this.cleanMarkers();
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetLastPrime(parseInt(input.val()) - 1);
             input.val(p);
@@ -169,48 +177,59 @@ let UI =
         },
 
         setP(_index) {
-            indexP = _index;
-
-            $('#P').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+            if(pointsArray != null )
+            {
+                indexP = _index;
+                CanvasCreator.markPoint(indexP,'P');
+                $('#P').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+            }
         },
 
         lastP() {
-            if (indexP > 0) {
+            if (pointsArray != null && indexP > 0) {
                 indexP--;
                 this.setP(indexP);
-                CanvasCreator.markPoint(indexP,'P');
             }
 
         },
 
         nextP() {
-            if (indexP < (pointsArray.length - 1)) {
+            if (pointsArray != null && indexP < (pointsArray.length - 1)) {
                 indexP++;
                 this.setP(indexP);
-                CanvasCreator.markPoint(indexP,'P');
             }
         },
 
         setQ(_index) {
-            indexQ = _index;
-            $('#Q').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+            if(pointsArray != null ){
+                indexQ = _index;
+                CanvasCreator.markPoint(indexQ,'Q');
+                $('#Q').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+            }
+
         },
 
         lastQ() {
-            if (indexQ > 0) {
+            if (pointsArray != null && indexQ > 0) {
                 indexQ--;
                 this.setQ(indexQ);
-                CanvasCreator.markPoint(indexQ,'Q');
             }
 
         },
 
         nextQ() {
-            if (indexQ < (pointsArray.length - 1)) {
+            if (pointsArray != null && indexQ < (pointsArray.length - 1)) {
                 indexQ++;
                 this.setQ(indexQ);
-                CanvasCreator.markPoint(indexQ,'Q');
             }
+        },
+
+        cleanMarkers() {
+            indexP = -1;
+            indexQ = -1;
+            $('#Q').val('-');
+            $('#P').val('-');
+            CanvasCreator.removePointMarker();
         },
     };
 

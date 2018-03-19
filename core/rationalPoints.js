@@ -1,7 +1,7 @@
 this.onmessage = e => {
-    let z = e.data[2];
-    let a = e.data[0];
-    let b = e.data[1];
+    let z = parseInt(e.data[2]);
+    let a = parseInt(e.data[0]);
+    let b = parseInt(e.data[1]);
     let m_Points = [];
 
     if (isNaN(z) || z < 2 || isNaN(z) || isNaN(z))

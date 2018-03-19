@@ -206,7 +206,7 @@ let CanvasCreator = {
                 fillStyle: config.color.axes,
                 strokeStyle: config.color.axes,
                 strokeWidth: config.width.text,
-                x: (config.distance.padding - (space > 10 ? (space > 100 ? (space > 1000 ? (5 * config.distance.text) : (4 * config.distance.text)) : (2 * config.distance.text)) : 0)),
+                x: (config.distance.padding - (space >= 10 ? (space >= 100 ? (space >= 1000 ? (5 * config.distance.text) : (4 * config.distance.text)) : (2 * config.distance.text)) : 0)),
                 y: (canvasSize - index - ((space > 1000) ? config.font.minSize * 0.5 : config.font.size * 0.5)),
                 fontSize: (space > 1000) ? config.font.minSize : config.font.size,
                 fontFamily: config.font.type,
@@ -293,6 +293,12 @@ let CanvasCreator = {
             fontFamily: config.font.type,
             text: _name,
         });
+    },
 
+    removePointMarker: function () {
+        let canvas = $('#canvas');
+        makedP = false;
+        canvas.removeLayer('P').removeLayer('Ptext').drawLayers();
+        canvas.removeLayer('Q').removeLayer('Qtext').drawLayers();
     }
 };
