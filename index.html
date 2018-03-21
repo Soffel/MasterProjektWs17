@@ -91,8 +91,9 @@
                         <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
                         </span>
                     </div>
-                </div>
-                <div class="col-lg-6">
+
+                    <br><br><br><br>
+
                     <label for="P"><math>P</math>: </label>
                     <div class="input-group marg10">
                         <span class="input-group-btn">
@@ -116,6 +117,23 @@
                         <button class="btn btn-default" type="button" onclick="UI.nextQ()">></button>
                         </span>
                     </div>
+
+                    <div>
+                        <button onclick="UI.cleanMarkers()"><span class="glyphicon glyphicon-trash"></span></button>
+                    </div>
+
+                    <label for="R"><math>R</math>: </label>
+                    <div class="input-group marg10">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" disabled><</button>
+                        </span>
+                        <input type="text" id="R" class="form-control" value="-" disabled>
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" disabled >></button>
+                        </span>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -136,7 +154,7 @@
 <script src="core/3rdParty/Math/betterRound.js"></script>
 <script src="core/3rdParty/JCanvas/donuts.js"></script>
 
-<script src="core/UI.js"></script>
+<script src="core/CustomTechniques.js"></script>
 <script src="core/screen.js"></script>
 <script src="core/canvasVs2.js"></script>
 <script src="core/primes.js"></script>

@@ -25,8 +25,8 @@ let Preparer =
                 Preparer.setPointsArray(e.data);
                 CanvasCreator.createPoints(e.data);
                 Progress.onFinish();
-                if(indexP  >= 0) UI.setP(indexP);
-                if(indexQ  >= 0) UI.setQ(indexQ);
+                if (indexP >= 0) UI.setP(indexP);
+                if (indexQ >= 0) UI.setQ(indexQ);
 
             };
         },
@@ -58,7 +58,7 @@ let Preparer =
             return pointsArray;
         },
 
-        getPoint:function (_index) {
+        getPoint: function (_index) {
             return pointsArray[_index];
         },
 
@@ -177,11 +177,26 @@ let UI =
         },
 
         setP(_index) {
-            if(pointsArray != null )
-            {
+            if (pointsArray != null) {
                 indexP = _index;
-                CanvasCreator.markPoint(indexP,'P');
+                CanvasCreator.markPoint(indexP, 'P');
                 $('#P').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+                Addition.getR();
+            }
+        },
+
+        setR(_index) {
+            if (pointsArray != null) {
+                if(_index !== undefined)
+                {
+                    CanvasCreator.markPoint(_index, 'R');
+                    $('#R').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+                }
+                else
+                {
+                    $('#R').val('O');
+                }
+
             }
         },
 
@@ -201,10 +216,11 @@ let UI =
         },
 
         setQ(_index) {
-            if(pointsArray != null ){
+            if (pointsArray != null) {
                 indexQ = _index;
-                CanvasCreator.markPoint(indexQ,'Q');
+                CanvasCreator.markPoint(indexQ, 'Q');
                 $('#Q').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+                Addition.getR();
             }
 
         },
@@ -229,6 +245,7 @@ let UI =
             indexQ = -1;
             $('#Q').val('-');
             $('#P').val('-');
+            $('#R').val('-');
             CanvasCreator.removePointMarker();
         },
     };
@@ -244,5 +261,66 @@ let Progress =
                 $('.cssload-box-loading').css('display', 'none');
                 $('.loader').css('display', 'none');
             }, 200);
+        }
+    };
+
+let Addition =
+    {
+        mod: function (_x, _p) {
+            return((_x % _p) + _p) %_p;
+        },
+
+        getInversArray: function (_p) {
+            let inverse = [];
+
+            for (let i=0; i<_p; i++) {
+                for (let j=i; j<_p; j++) {
+                    if ((i*j) % _p === 1) {
+                        inverse[i] = j;
+                        inverse[j] = i;
+                        break;
+                    }
+                }
+            }
+
+            return inverse;
+        },
+
+        getM: function (_P, _Q, _prime, _inverse) {
+            if (indexQ === indexP) {
+                // ((3*x^2+a)/2*y) mod p
+
+                return this.mod( (3*(parseInt(_P[0]) * parseInt(_P[0])) + parseInt($('#a').val())) * _inverse[this.mod(2*parseInt(_P[1]), _prime)] ,_prime);
+            }
+            else {
+                // ((y2 - y1)/(x2-x1)) mod p
+                return this.mod((parseInt(_Q[1]) - parseInt(_P[1]))* _inverse[this.mod((parseInt(_Q[0]) - parseInt(_P[0])), _prime)], _prime);
+            }
+        },
+
+        getR: function () {
+
+            if (pointsArray != null && indexP > -1 && indexQ > -1) {
+                let P = pointsArray[indexP];
+                let Q = pointsArray[indexQ];
+
+                let prime   = parseInt($('#primeinput').val());
+                let inverse = this.getInversArray(prime);
+
+                let m  = this.getM(P, Q, prime, inverse);
+
+                let Rx = this.mod( m*m - parseInt(Q[0]) - parseInt(P[0]),prime);
+                let Ry = this.mod( m*parseInt(P[0]) - m*Rx - parseInt(P[1]), prime );
+
+                UI.setR(this.findIndex([Rx,Ry]));
+            }
+        },
+
+        findIndex:function (_R) {
+            for(let index = 0; index < pointsArray.length; index++)
+            {
+                if(pointsArray[index][0] === _R[0] && pointsArray[index][1] === _R[1])
+                    return index;
+            }
         }
     };

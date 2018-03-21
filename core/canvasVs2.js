@@ -7,6 +7,7 @@ const config =
                 grid: '#929292',
                 point: '#165dff',
                 mark: '#ff0000',
+                result: '#ff0095'
             },
         font:
             {
@@ -271,21 +272,40 @@ let CanvasCreator = {
         let point = Preparer.getPoint(_index);
 
         canvas.removeLayer(_name).removeLayer(_name + 'text').drawLayers();
+        canvas.removeLayer('R').removeLayer('Rtext').drawLayers();
 
         canvas.drawDonut({
             layer: true,
             name: _name,
-            fillStyle: config.color.mark,
+            fillStyle: (_name == 'R'? config.color.result : config.color.mark),
             x: point['point'].pointX,
             y: point['point'].pointY,
             radius: config.point.radius,
             holeSize: config.point.hole,
+            data: {
+                point: {
+                    x: point[0],
+                    y: point[1],
+                },
+
+                index: _index,
+            },
+            click: function (layer) {
+                CanvasCreator.markPoint(layer.data.index, makedP ? 'Q' : 'P');
+                if (!makedP) {
+                    UI.setP(layer.data.index);
+                }
+                else {
+                    UI.setQ(layer.data.index);
+                }
+                makedP = !makedP;
+            },
 
         }).drawText({
             layer: true,
             name: _name + 'text',
-            fillStyle: config.color.mark,
-            strokeStyle: config.color.mark,
+            fillStyle: (_name == 'R'? config.color.result : config.color.mark),
+            strokeStyle: (_name == 'R'? config.color.result : config.color.mark),
             strokeWidth: config.width.text,
             x: (point['point'].pointX - ((_name === 'Q') ? -config.font.size: config.font.size )),
             y: (point['point'].pointY - config.font.size),
@@ -295,10 +315,13 @@ let CanvasCreator = {
         });
     },
 
+
+
     removePointMarker: function () {
         let canvas = $('#canvas');
         makedP = false;
         canvas.removeLayer('P').removeLayer('Ptext').drawLayers();
         canvas.removeLayer('Q').removeLayer('Qtext').drawLayers();
+        canvas.removeLayer('R').removeLayer('Rtext').drawLayers();
     }
 };
