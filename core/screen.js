@@ -36,4 +36,13 @@ let Screen =
     {
         return remote.getCurrentWindow().getSize()
     },
+
+    showMenu: function () {
+        $('.sidemenu').css('display', 'block');
+        $('.loader2').css('display', 'block');
+    },
+    hideMenu: function () {
+        $('.sidemenu').css('display', 'none');
+        $('.loader2').css('display', 'none');
+    }
 };

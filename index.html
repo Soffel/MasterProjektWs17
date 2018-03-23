@@ -6,14 +6,18 @@
     <title>Elliptische Kurven</title>
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="node_modules/sweetalert/dist/sweetalert.min.js"></script>
+
 
 </head>
 <body>
 
 <header>
 
+    <div class="headerMenuLeft" onclick="Screen.showMenu()">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </div>
     <div class="headerMenu" onclick="Screen.close()">
         <span class="glyphicon glyphicon-remove"></span>
     </div>
@@ -29,108 +33,188 @@
 </header>
 
 <div class="container-fluid">
-
+    <div class="sidemenu">
+        <div>
+            <label for="colorDonuts">Punkte: </label>
+            <div class="input-group colorpicker-component cp">
+                <input id="colorDonuts" type="text" class="form-control" name="colorDonuts" value="#165dff"
+                       onchange="config.changeColor('point','colorDonuts')"/>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+        </div>
+        <br>
+        <div>
+            <label for="colorP">Punkt P: </label>
+            <div class="input-group colorpicker-component cp">
+                <input id="colorP" type="text" class="form-control" name="colorP" value="#ff0000"
+                       onchange="config.changeColor('markP','colorP')"/>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+        </div>
+        <br>
+        <div>
+            <label for="colorQ">Punkt Q: </label>
+            <div class="input-group colorpicker-component cp">
+                <input id="colorQ" type="text" class="form-control" name="colorQ" value="#ff0000"
+                       onchange="config.changeColor('markQ','colorQ')"/>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+        </div>
+        <br>
+        <div>
+            <label for="colorR">Punkt R: </label>
+            <div class="input-group colorpicker-component cp">
+                <input id="colorR" type="text" class="form-control" name="colorR" value="#ff0095"
+                       onchange="config.changeColor('result','colorR')"/>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+        </div>
+        <br>
+        <div>
+            <label for="colorGrid">Grid: </label>
+            <div class="input-group colorpicker-component cp">
+                <input id="colorGrid" type="text" class="form-control" name="colorGrid" value="#929292"
+                       onchange="config.changeColor('grid','colorGrid')"/>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <div>
+            <label for="space">Aufteilung: </label>
+            <select id="space" class="form-control" onchange="Preparer.redraw()">
+                <option value="1" selected>1</option>
+            </select>
+        </div>
+    </div>
     <div id="canvascontainer" class="col-lg-7">
         <canvas id="canvas" width="600" height="600"></canvas>
     </div>
-    <div class="col-lg-4 form-inline">
+    <div class="col-lg-4 form-inline ">
         <div id="menu">
+
             <div class="row">
-                <div class="col-lg-6">
-                    <div id="funktion" class="text-center">
-                        <math> y<sup>2</sup> = x<sup>3</sup> + <span id="forma">1</span>x + <span id="formb">1</span> über Z<sub id="prime">3</sub></math>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="pull-right">
-                        <label for="space">Aufteilung: </label>
-                        <select id="space" class="form-control" onchange="Preparer.redraw()">
-                            <option value="1" selected>1</option>
-                        </select>
-                    </div>
+                <div id="funktion" class="col-lg-12 text-center">
+
+                    <math> y<sup>2</sup> = x<sup>3</sup> + <span id="forma">1</span>x + <span id="formb">1</span>
+                        über Z<sub id="prime">3</sub></math>
                 </div>
             </div>
 
-            <br><br>
-
+            <br><br><br>
             <div class="row">
-                <div class="col-lg-6" >
-                    <label for="primeinput"><math>p</math>: </label>
-                    <div class="input-group marg10">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.lastPrime()"><</button>
-                        </span>
-                        <input type="text" id="primeinput" class="form-control" min="2" value="3" onchange="UI.testPrime()">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.nextPrime()">></button>
-                        </span>
-                    </div>
-
-                    <br><br>
-
-                    <label for="a"><math>a</math>: </label>
-                    <div class="input-group marg10">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.last('a')"><</button>
-                        </span>
-                        <input type="text" id="a" class="form-control" value="1" onchange="UI.check('a')">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.next('a')">></button>
-                        </span>
-                    </div>
-
-                    <br><br>
-
-                    <label for="b"><math>b</math>: </label>
-                    <div class="input-group marg10">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.last('b')"><</button>
-                        </span>
-                        <input type="text" id="b" class="form-control" value="1" onchange="UI.check('b')">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="col-lg-12">
+                        <label for="primeinput">
+                            <math>p</math>
+                            : </label>
+                        <div class="input-group marg10">
                             <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
-                        </span>
+                                <button class="btn btn-default" type="button" onclick="UI.lastPrime()"><</button>
+                            </span>
+                            <input type="text" id="primeinput" class="form-control" min="2" value="3"
+                                   onchange="UI.testPrime()">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="UI.nextPrime()">></button>
+                            </span>
+                        </div>
+
+                        <br><br>
+
+                        <label for="a">
+                            <math>a</math>
+                            : </label>
+                        <div class="input-group marg10">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="UI.last('a')"><</button>
+                            </span>
+                            <input type="text" id="a" class="form-control" value="1" onchange="UI.check('a')">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="UI.next('a')">></button>
+                            </span>
+                        </div>
+
+                        <br><br>
+
+                        <label for="b">
+                            <math>b</math>
+                            : </label>
+                        <div class="input-group marg10">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="UI.last('b')"><</button>
+                            </span>
+                            <input type="text" id="b" class="form-control" value="1" onchange="UI.check('b')">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.next('b')">></button>
+                            </span>
+                        </div>
+
+                        <br><br><br><br><br>
+
                     </div>
 
-                    <br><br><br><br>
+                    <div class="col-lg-12">
+                        <div id="Points" class="left">
+                            <label for="P">
+                                <math>P</math>
+                                : </label>
+                            <div class="input-group marg10">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="UI.lastP()"><</button>
+                            </span>
+                                <input type="text" id="P" class="form-control" value="-" disabled>
+                                <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="UI.nextP()">></button>
+                            </span>
+                            </div>
 
-                    <label for="P"><math>P</math>: </label>
-                    <div class="input-group marg10">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.lastP()"><</button>
-                        </span>
-                        <input type="text" id="P" class="form-control"  value="-" disabled>
-                        <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="UI.nextP()">></button>
-                        </span>
-                    </div>
+                            <br><br>
 
-                    <br><br>
+                            <label for="Q">
+                                <math>Q</math>
+                                : </label>
+                            <div class="input-group marg10">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" onclick="UI.lastQ()"><</button>
+                                </span>
+                                <input type="text" id="Q" class="form-control" value="-" disabled>
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="UI.nextQ()">></button>
+                                </span>
+                            </div>
 
-                    <label for="Q"><math>Q</math>: </label>
-                    <div class="input-group marg10">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="UI.lastQ()"><</button>
-                        </span>
-                        <input type="text" id="Q" class="form-control" value="-" disabled>
-                        <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="UI.nextQ()">></button>
-                        </span>
-                    </div>
+                            <br><br>
 
-                    <div>
-                        <button onclick="UI.cleanMarkers()"><span class="glyphicon glyphicon-trash"></span></button>
-                    </div>
+                            <label for="R">
+                                <math>R</math>
+                                : </label>
+                            <div class="input-group marg10">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" disabled><</button>
+                                </span>
+                                <input type="text" id="R" class="form-control" value="-" disabled>
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" disabled>></button>
+                                </span>
+                            </div>
+                        </div>
 
-                    <label for="R"><math>R</math>: </label>
-                    <div class="input-group marg10">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" disabled><</button>
-                        </span>
-                        <input type="text" id="R" class="form-control" value="-" disabled>
-                        <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" disabled >></button>
-                        </span>
+                        <br><br>
+
+                        <div class="text-center">
+                            <div class="btn-group btn-group-lg">
+
+                                <button id="play" class="btn btn-default" onclick="UI.play()"><span
+                                        class="glyphicon glyphicon-play"></span></button>
+                                <button id="stop" class="btn btn-default" onclick="UI.stop()"><span
+                                        class="glyphicon glyphicon-stop"></span></button>
+                                <button class="btn btn-default" onclick="UI.cleanMarkers()"><span
+                                        class="glyphicon glyphicon-trash"></span></button>
+                            </div>
+                        </div>
+
+
                     </div>
 
 
@@ -139,6 +223,7 @@
         </div>
     </div>
     <div class="loader"></div>
+    <div class="loader2" onclick="Screen.hideMenu()"></div>
     <div class="cssload-box-loading"></div>
     <footer>
         &copy; Masterprojekt WS17 @André Wagenknecht
@@ -150,6 +235,7 @@
 <script src="node_modules/sweetalert/dist/sweetalert.min.js"></script>
 <script>window.$ = window.jQuery = require('jquery');</script>
 <script>require('bootstrap');</script>
+<script src="node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
 <script src="core/3rdParty/JCanvas/jcanvas.js"></script>
 <script src="core/3rdParty/Math/betterRound.js"></script>
 <script src="core/3rdParty/JCanvas/donuts.js"></script>
@@ -161,14 +247,21 @@
 <script src="core/rationalPoints.js" async></script>
 
 <script>
+
     $(function () {
         Preparer.run();
         Preparer.redraw();
     });
 
+
+    $(function () {
+        $('.cp').colorpicker({
+            useAlpha: false
+        });
+    });
+
     $(window).resize(function () {
         Preparer.redraw();
-
     });
 
 </script>

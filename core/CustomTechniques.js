@@ -6,6 +6,7 @@ let zoom = 0;
 let indexP = -1;
 let indexQ = -1;
 let pointsArray;
+let play = false;
 
 let Preparer =
     {
@@ -17,6 +18,7 @@ let Preparer =
 
         redraw: function () {
             Progress.onRun();
+            UI.stop();
 
             const worker = new Worker('core/rationalPoints.js');
 
@@ -54,10 +56,6 @@ let Preparer =
             return zoom;
         },
 
-        getPointsArray: function () {
-            return pointsArray;
-        },
-
         getPoint: function (_index) {
             return pointsArray[_index];
         },
@@ -86,7 +84,7 @@ let Preparer =
 
 let UI =
     {
-        next(_id) {
+        next: function (_id) {
             this.cleanMarkers();
             let element = $('#' + _id);
             element.val((parseFloat(element.val()) + 1));
@@ -95,7 +93,26 @@ let UI =
             this.check(_id);
         },
 
-        last(_id) {
+        play: function () {
+            if (indexP < 0)
+                this.nextP();
+
+            $('#play').css('display', 'none');
+            $('#stop').css('display', 'block');
+
+            play = true;
+
+            this.player();
+
+        },
+
+        stop: function () {
+            $('#play').css('display', 'block');
+            $('#stop').css('display', 'none');
+            play = false;
+        },
+
+        last: function (_id) {
             this.cleanMarkers();
             let element = $('#' + _id);
             element.val((parseFloat(element.val()) - 1));
@@ -103,7 +120,7 @@ let UI =
             this.check(_id);
         },
 
-        check(_id) {
+        check: function (_id) {
             if (this.checkAandB(_id)) {
                 Preparer.redraw();
             }
@@ -112,7 +129,7 @@ let UI =
             }
         },
 
-        testPrime() {
+        testPrime: function () {
             this.cleanMarkers();
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()));
@@ -129,7 +146,7 @@ let UI =
 
         },
 
-        nextPrime() {
+        nextPrime: function () {
             this.cleanMarkers();
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetNextPrime(parseInt(input.val()) + 1);
@@ -146,7 +163,7 @@ let UI =
 
         },
 
-        lastPrime() {
+        lastPrime: function () {
             this.cleanMarkers();
             const input = $(PRIME_INPUT);
             let p = PrimeFunctions.testAndGetLastPrime(parseInt(input.val()) - 1);
@@ -162,7 +179,7 @@ let UI =
             }
         },
 
-        checkAandB(_id) {
+        checkAandB: function (_id) {
             let a = parseInt($(VAR_A_INPUT).val());
             let b = parseInt($(VAR_B_INPUT).val());
 
@@ -176,31 +193,29 @@ let UI =
             return true;
         },
 
-        setP(_index) {
+        setP: function (_index) {
             if (pointsArray != null) {
                 indexP = _index;
                 CanvasCreator.markPoint(indexP, 'P');
-                $('#P').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+                $('#P').val('( ' + pointsArray[_index][0] + ', ' + pointsArray[_index][1] + ' )');
                 Addition.getR();
             }
         },
 
-        setR(_index) {
+        setR: function (_index) {
             if (pointsArray != null) {
-                if(_index !== undefined)
-                {
+                if (_index !== undefined) {
                     CanvasCreator.markPoint(_index, 'R');
-                    $('#R').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+                    $('#R').val('( ' + pointsArray[_index][0] + ', ' + pointsArray[_index][1] + ' )');
                 }
-                else
-                {
+                else {
                     $('#R').val('O');
                 }
 
             }
         },
 
-        lastP() {
+        lastP: function () {
             if (pointsArray != null && indexP > 0) {
                 indexP--;
                 this.setP(indexP);
@@ -208,24 +223,24 @@ let UI =
 
         },
 
-        nextP() {
+        nextP: function () {
             if (pointsArray != null && indexP < (pointsArray.length - 1)) {
                 indexP++;
                 this.setP(indexP);
             }
         },
 
-        setQ(_index) {
+        setQ: function (_index) {
             if (pointsArray != null) {
                 indexQ = _index;
                 CanvasCreator.markPoint(indexQ, 'Q');
-                $('#Q').val('(' + pointsArray[_index][0] + ',' + pointsArray[_index][1] + ')');
+                $('#Q').val('(' + pointsArray[_index][0] + ', ' + pointsArray[_index][1] + ')');
                 Addition.getR();
             }
 
         },
 
-        lastQ() {
+        lastQ: function () {
             if (pointsArray != null && indexQ > 0) {
                 indexQ--;
                 this.setQ(indexQ);
@@ -233,14 +248,15 @@ let UI =
 
         },
 
-        nextQ() {
+        nextQ: function () {
             if (pointsArray != null && indexQ < (pointsArray.length - 1)) {
                 indexQ++;
                 this.setQ(indexQ);
             }
         },
 
-        cleanMarkers() {
+        cleanMarkers: function () {
+            UI.stop();
             indexP = -1;
             indexQ = -1;
             $('#Q').val('-');
@@ -248,6 +264,26 @@ let UI =
             $('#R').val('-');
             CanvasCreator.removePointMarker();
         },
+
+        player: function () {
+            if (play) {
+                if (indexQ < pointsArray.length - 1)
+                    UI.nextQ();
+                else
+                {
+                    if(indexP < pointsArray.length -1)
+                        UI.nextP();
+                    else
+                        UI.setP(0);
+
+                    UI.setQ(0);
+                }
+
+
+                setTimeout(UI.player, 1000);
+            }
+        },
+
     };
 
 let Progress =
@@ -267,15 +303,15 @@ let Progress =
 let Addition =
     {
         mod: function (_x, _p) {
-            return((_x % _p) + _p) %_p;
+            return ((_x % _p) + _p) % _p;
         },
 
         getInversArray: function (_p) {
             let inverse = [];
 
-            for (let i=0; i<_p; i++) {
-                for (let j=i; j<_p; j++) {
-                    if ((i*j) % _p === 1) {
+            for (let i = 0; i < _p; i++) {
+                for (let j = i; j < _p; j++) {
+                    if ((i * j) % _p === 1) {
                         inverse[i] = j;
                         inverse[j] = i;
                         break;
@@ -289,12 +325,11 @@ let Addition =
         getM: function (_P, _Q, _prime, _inverse) {
             if (indexQ === indexP) {
                 // ((3*x^2+a)/2*y) mod p
-
-                return this.mod( (3*(parseInt(_P[0]) * parseInt(_P[0])) + parseInt($('#a').val())) * _inverse[this.mod(2*parseInt(_P[1]), _prime)] ,_prime);
+                return this.mod((3 * (parseInt(_P[0]) * parseInt(_P[0])) + parseInt($('#a').val())) * _inverse[this.mod(2 * parseInt(_P[1]), _prime)], _prime);
             }
             else {
                 // ((y2 - y1)/(x2-x1)) mod p
-                return this.mod((parseInt(_Q[1]) - parseInt(_P[1]))* _inverse[this.mod((parseInt(_Q[0]) - parseInt(_P[0])), _prime)], _prime);
+                return this.mod((parseInt(_Q[1]) - parseInt(_P[1])) * _inverse[this.mod((parseInt(_Q[0]) - parseInt(_P[0])), _prime)], _prime);
             }
         },
 
@@ -304,22 +339,21 @@ let Addition =
                 let P = pointsArray[indexP];
                 let Q = pointsArray[indexQ];
 
-                let prime   = parseInt($('#primeinput').val());
+                let prime = parseInt($('#primeinput').val());
                 let inverse = this.getInversArray(prime);
 
-                let m  = this.getM(P, Q, prime, inverse);
+                let m = this.getM(P, Q, prime, inverse);
 
-                let Rx = this.mod( m*m - parseInt(Q[0]) - parseInt(P[0]),prime);
-                let Ry = this.mod( m*parseInt(P[0]) - m*Rx - parseInt(P[1]), prime );
+                let Rx = this.mod(m * m - parseInt(Q[0]) - parseInt(P[0]), prime);
+                let Ry = this.mod(m * parseInt(P[0]) - m * Rx - parseInt(P[1]), prime);
 
-                UI.setR(this.findIndex([Rx,Ry]));
+                UI.setR(this.findIndex([Rx, Ry]));
             }
         },
 
-        findIndex:function (_R) {
-            for(let index = 0; index < pointsArray.length; index++)
-            {
-                if(pointsArray[index][0] === _R[0] && pointsArray[index][1] === _R[1])
+        findIndex: function (_R) {
+            for (let index = 0; index < pointsArray.length; index++) {
+                if (pointsArray[index][0] === _R[0] && pointsArray[index][1] === _R[1])
                     return index;
             }
         }

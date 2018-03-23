@@ -6,8 +6,10 @@ const config =
                 axes: '#000',
                 grid: '#929292',
                 point: '#165dff',
-                mark: '#ff0000',
-                result: '#ff0095'
+                markP: '#ff0000',
+                markQ: '#ff0000',
+                result: '#ff0095',
+                white: '#fff',
             },
         font:
             {
@@ -23,6 +25,8 @@ const config =
                 arrow: 8,
                 beauty: 1,
                 text: 4,
+                corner: 10,
+
             },
         width:
             {
@@ -40,7 +44,47 @@ const config =
                 radius: 5,
                 hole: 0.5,
 
-            }
+            },
+
+        changeColor:function (_name,_id) {
+           switch (_name)
+           {
+               case 'point':
+               {
+                   config.color.point = $('#'+_id).val();
+                   Preparer.redraw();
+                   break;
+               }
+
+               case 'markP':
+               {
+                   config.color.markP = $('#'+_id).val();
+                   Preparer.redraw();
+                   break;
+               }
+
+               case 'markQ':
+               {
+                   config.color.markQ = $('#'+_id).val();
+                   Preparer.redraw();
+                   break;
+               }
+
+               case 'result':
+               {
+                   config.color.result = $('#'+_id).val();
+                   Preparer.redraw();
+                   break;
+               }
+
+               case 'grid':
+               {
+                   config.color.grid = $('#'+_id).val();
+                   Preparer.redraw();
+                   break;
+               }
+           }
+        }
     };
 
 let makedP = false;
@@ -262,6 +306,12 @@ let CanvasCreator = {
                     }
                     makedP = !makedP;
                 },
+                mouseover: function (layer) {
+                    CanvasCreator.drawPointCoords(layer.data.index);
+                },
+                mouseout: function () {
+                    CanvasCreator.removePointCoords();
+                },
             });
         }
     },
@@ -271,13 +321,14 @@ let CanvasCreator = {
         let canvas = $('#canvas');
         let point = Preparer.getPoint(_index);
 
-        canvas.removeLayer(_name).removeLayer(_name + 'text').drawLayers();
-        canvas.removeLayer('R').removeLayer('Rtext').drawLayers();
+        canvas.removeLayer('Crec').removeLayer('Ctext').drawLayers();
+        canvas.removeLayer(_name).removeLayer(_name + 'rec').removeLayer(_name + 'text').drawLayers();
+        canvas.removeLayer('R').removeLayer('Rrec').removeLayer('Rtext').drawLayers();
 
         canvas.drawDonut({
             layer: true,
             name: _name,
-            fillStyle: (_name == 'R'? config.color.result : config.color.mark),
+            fillStyle: (_name === 'R' ? config.color.result : (_name==='P'? config.color.markP : config.color.markQ)),
             x: point['point'].pointX,
             y: point['point'].pointY,
             radius: config.point.radius,
@@ -301,27 +352,68 @@ let CanvasCreator = {
                 makedP = !makedP;
             },
 
+        }).drawRect({
+            layer: true,
+            name: _name + 'rec',
+            fillStyle: config.color.white,
+            x: (point['point'].pointX - config.font.size),
+            y: (point['point'].pointY - config.font.size),
+            width: ((indexQ ===indexP && _name !== 'R') ? 2*(config.font.size + config.distance.text): (config.font.size + config.distance.text)),
+            height: config.font.size + config.distance.text,
+            cornerRadius: config.distance.corner,
         }).drawText({
             layer: true,
             name: _name + 'text',
-            fillStyle: (_name == 'R'? config.color.result : config.color.mark),
-            strokeStyle: (_name == 'R'? config.color.result : config.color.mark),
+            fillStyle: (_name === 'R' ? config.color.result : (_name==='P'? config.color.markP : config.color.markQ)),
+            strokeStyle: (_name === 'R' ? config.color.result : (_name==='P'? config.color.markP : config.color.markQ)),
             strokeWidth: config.width.text,
-            x: (point['point'].pointX - ((_name === 'Q') ? -config.font.size: config.font.size )),
+            x: (point['point'].pointX - config.font.size),
             y: (point['point'].pointY - config.font.size),
             fontSize: config.font.size,
             fontFamily: config.font.type,
-            text: _name,
+            text: ((indexQ ===indexP && _name !== 'R') ? '2 * P' : _name),
         });
     },
 
+    drawPointCoords: function (_index) {
+        let canvas = $('#canvas');
+        let point = Preparer.getPoint(_index);
+        canvas.drawRect({
+            layer: true,
+            name: 'Crec',
+            fillStyle: config.color.white,
+            x: (point['point'].pointX - config.font.size),
+            y: (point['point'].pointY - config.font.size),
+            width: ((point[0] + point[1]) >= 10 ? ((point[0] + point[1]) >= 100 ? ((point[0] + point[1]) >= 1000 ? 100 : 80) : 60) : 50),
+            height: config.font.size + config.distance.text,
+            cornerRadius: 10,
+        }).drawText({
+            layer: true,
+            name: 'Ctext',
+            fillStyle: config.color.markP,
+            strokeStyle: config.color.markP,
+            strokeWidth: config.width.text,
+            x: (point['point'].pointX - config.font.size),
+            y: (point['point'].pointY - config.font.size),
+            fontSize: config.font.size,
+            fontFamily: config.font.type,
+            text: '( ' + point[0] + ', ' + point[1] + ' )',
+        })
+
+    },
+
+    removePointCoords: function () {
+        let canvas = $('#canvas');
+        canvas.removeLayer('Crec').removeLayer('Ctext').drawLayers();
+    },
 
 
     removePointMarker: function () {
         let canvas = $('#canvas');
         makedP = false;
-        canvas.removeLayer('P').removeLayer('Ptext').drawLayers();
-        canvas.removeLayer('Q').removeLayer('Qtext').drawLayers();
-        canvas.removeLayer('R').removeLayer('Rtext').drawLayers();
+        canvas.removeLayer('Crec').removeLayer('Ctext').drawLayers();
+        canvas.removeLayer('P').removeLayer('Prec').removeLayer('Ptext').drawLayers();
+        canvas.removeLayer('Q').removeLayer('Qrec').removeLayer('Qtext').drawLayers();
+        canvas.removeLayer('R').removeLayer('Rrec').removeLayer('Rtext').drawLayers();
     }
 };
